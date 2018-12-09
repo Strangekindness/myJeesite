@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sys.dao.ParamDao">
+    
+	<sql id="paramColumns">
+		a.id AS "id",
+		a.param_category_type_code AS "paramCategoryTypeCode",
+		a.param_category_type_name AS "paramCategoryTypeName",
+		a.param_cn_name AS "paramCnName",
+		a.param_key AS "paramKey",
+		a.param_value AS "paramValue",
+		a.description AS "description",
+		a.sort AS "sort",
+		a.status AS "status",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="paramJoins">
+	</sql>
+    
+	<select id="get" resultType="Param">
+		SELECT 
+			<include refid="paramColumns"/>
+		FROM sys_param a
+		<include refid="paramJoins"/>
+		WHERE a.id = #{id}
+	</select>
+		
+	<select id="findList" resultType="Param">
+		SELECT 
+			<include refid="paramColumns"/>
+		FROM sys_param a
+		<include refid="paramJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="paramCategoryTypeCode != null and paramCategoryTypeCode != ''">
+				AND a.param_category_type_code = #{paramCategoryTypeCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.param_category_type_code
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Param">
+		SELECT 
+			<include refid="paramColumns"/>
+		FROM sys_param a
+		<include refid="paramJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.param_category_type_code
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_param(
+			id,
+			param_category_type_code,
+			param_category_type_name,
+			param_cn_name,
+			param_key,
+			param_value,
+			description,
+			sort,
+			status,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{paramCategoryTypeCode},
+			#{paramCategoryTypeName},
+			#{paramCnName},
+			#{paramKey},
+			#{paramValue},
+			#{description},
+			#{sort},
+			#{status},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_param SET 	
+			param_category_type_code = #{paramCategoryTypeCode},
+			param_category_type_name = #{paramCategoryTypeName},
+			param_cn_name = #{paramCnName},
+			param_key = #{paramKey},
+			param_value = #{paramValue},
+			description = #{description},
+			sort = #{sort},
+			status = #{status},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sys_param SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

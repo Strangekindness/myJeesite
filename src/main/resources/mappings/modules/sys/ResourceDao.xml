@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sys.dao.ResourceDao">
+    
+	<sql id="resourceColumns">
+		a.id AS "id",
+		a.resource_type_code AS "resourceTypeCode",
+		a.name AS "name",
+		a.url AS "url",
+		a.http_method AS "httpMethod",
+		a.sort AS "sort",
+		a.status AS "status",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="resourceJoins">
+	</sql>
+    
+	<select id="get" resultType="Resource">
+		SELECT 
+			<include refid="resourceColumns"/>
+		FROM sys_resource a
+		<include refid="resourceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Resource">
+		SELECT 
+			<include refid="resourceColumns"/>
+		FROM sys_resource a
+		<include refid="resourceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="resourceTypeCode != null and resourceTypeCode != ''">
+				AND a.resource_type_code = #{resourceTypeCode}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="url != null and url != ''">
+				AND a.url LIKE 
+					<if test="dbName == 'oracle'">'%'||#{url}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{url}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{url},'%')</if>
+			</if>
+			<if test="httpMethod != null and httpMethod != ''">
+				AND a.http_method LIKE 
+					<if test="dbName == 'oracle'">'%'||#{httpMethod}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{httpMethod}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{httpMethod},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Resource">
+		SELECT 
+			<include refid="resourceColumns"/>
+		FROM sys_resource a
+		<include refid="resourceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_resource(
+			id,
+			resource_type_code,
+			name,
+			url,
+			http_method,
+			sort,
+			status,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{resourceTypeCode},
+			#{name},
+			#{url},
+			#{httpMethod},
+			#{sort},
+			#{status},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_resource SET 	
+			resource_type_code = #{resourceTypeCode},
+			name = #{name},
+			url = #{url},
+			http_method = #{httpMethod},
+			sort = #{sort},
+			status = #{status},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sys_resource SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

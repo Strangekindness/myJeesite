@@ -1,0 +1,5 @@
+.tip {font-weight:bold;color:#245B99;font-size:15px;}
+.tipTran {transform: rotate(90deg);}
+.addinfo {
+    color: #FF9900;font-size: 28px;font-weight: 700; padding:5px 20px;
+}
