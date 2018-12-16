@@ -17,9 +17,9 @@
 		<if test="type != null and type != ''">
 			AND type = #{type}
 		</if>
-		<if test="category != null and category > -1">
+		<!--<if test="category != null and category > -1">
 			AND category = #{category}
-		</if>
+		</if>-->
 		<if test="description != null and description != ''">
 			AND description LIKE 
 					<if test="dbName == 'oracle'">'%'||#{description}||'%'</if>
@@ -34,9 +34,9 @@
 			* 
 		FROM sys_dict 
 		WHERE del_flag = #{DEL_FLAG_NORMAL} 
-		<if test="category != null and category > -1">
+		<!--<if test="category != null and category > -1">
 			AND category = #{category}
-		</if>
+		</if>-->
 		ORDER BY type, sort, update_date DESC
 	</select>
 	
@@ -45,9 +45,9 @@
 			type 
 		FROM sys_dict 
 		WHERE del_flag = #{DEL_FLAG_NORMAL} 
-		<if test="category != null and category > -1">
+		<!--<if test="category != null and category > -1">
 			AND category = #{category}
-		</if>
+		</if>-->
 		GROUP BY type
 		ORDER BY type
 	</select>
@@ -58,9 +58,9 @@
 			description as "description" 
 		FROM sys_dict 
 		WHERE del_flag = #{DEL_FLAG_NORMAL} 
-		<if test="category != null and category > -1">
+		<!--<if test="category != null and category > -1">
 			AND category = #{category}
-		</if>
+		</if>-->
 		GROUP BY type, description
 		ORDER BY type
 	</select>
@@ -73,7 +73,7 @@
 			label, 
 			type, 
 			description, 
-			category,
+			/*category,*/
 			sort, 
 			create_by, 
 			create_date, 
@@ -87,7 +87,7 @@
 			#{label}, 
 			#{type}, 
 			#{description}, 
-			#{category}, 
+			/*#{category}, */
 			#{sort}, 
 			#{createBy.id}, 
 			#{createDate}, 
@@ -104,7 +104,7 @@
 			label = #{label}, 
 			type = #{type}, 
 			description = #{description}, 
-			category = #{category}, 
+			/*category = #{category}, */
 			sort = #{sort}, 
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}, 

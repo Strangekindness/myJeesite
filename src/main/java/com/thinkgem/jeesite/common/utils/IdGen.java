@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 public class IdGen implements IdGenerator, SessionIdGenerator {
 
 	private static SecureRandom random = new SecureRandom();
+	public static UUIDGenerator idWorker = new UUIDGenerator(0, 0);
 	
 	/**
 	 * 封装JDK自带的UUID, 通过Random数字生成, 中间无-分割.
@@ -59,7 +60,16 @@ public class IdGen implements IdGenerator, SessionIdGenerator {
 	public Serializable generateId(Session session) {
 		return IdGen.uuid();
 	}
-	
+
+	/**
+	 * 获取新唯一编号（18为数值）
+	 * 来自于twitter项目snowflake的id产生方案，全局唯一，时间有序。
+	 * 64位ID (42(毫秒)+5(机器ID)+5(业务编码)+12(重复累加))
+	 */
+	public static String nextId() {
+		return String.valueOf(idWorker.nextId());
+	}
+
 	public static void main(String[] args) {
 		System.out.println(IdGen.uuid());
 		System.out.println(IdGen.uuid().length());
